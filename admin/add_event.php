@@ -67,36 +67,60 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 <?php include '../includes/navbar.php'; ?>
 
-<h1>Add New Event</h1>
+<h1 class="text-center text-2xl font-bold my-8">Add New Event</h1>
 
 <?php if (!empty($uploadError)): ?>
-    <p style="color: red;"><?= $uploadError ?></p>
+    <p class="text-center text-red-500 font-semibold mb-4"><?= $uploadError ?></p>
 <?php endif; ?>
 
-<form method="POST" enctype="multipart/form-data">
-    <label>Event Title:</label>
-    <input type="text" name="title" required>
-    
-    <label>Description:</label>
-    <textarea name="description" required></textarea>
-    
-    <label>Event Date:</label>
-    <input type="date" name="event_date" required>
-    
-    <label>Event Time:</label>
-    <input type="time" name="event_time" required>
-    
-    <label>Location:</label>
-    <input type="text" name="location" required>
-    
-    <label>Max Participants:</label>
-    <input type="number" name="max_participants" required>
-    
-    <label>Event Image (Optional):</label>
-    <input type="file" name="event_image" accept=".jpg,.jpeg,.png,.svg,.webp,.bmp,.gif">
-    
-    <label>Event Banner (Optional):</label>
-    <input type="file" name="event_banner" accept=".jpg,.jpeg,.png,.svg,.webp,.bmp,.gif">
-    
-    <button type="submit">Add Event</button>
-</form>
+<div class="max-w-3xl mx-auto bg-white p-8 shadow-lg rounded-lg mb-12   ">
+    <form method="POST" enctype="multipart/form-data" class="space-y-6">
+        <div>
+            <label class="block text-lg font-medium text-gray-700">Event Title:</label>
+            <input type="text" name="title" required class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+
+        <div>
+            <label class="block text-lg font-medium text-gray-700">Description:</label>
+            <textarea name="description" required class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <label class="block text-lg font-medium text-gray-700">Event Date:</label>
+                <input type="date" name="event_date" required class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <div>
+                <label class="block text-lg font-medium text-gray-700">Event Time:</label>
+                <input type="time" name="event_time" required class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+        </div>
+
+        <div>
+            <label class="block text-lg font-medium text-gray-700">Location:</label>
+            <input type="text" name="location" required class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+
+        <div>
+            <label class="block text-lg font-medium text-gray-700">Max Participants:</label>
+            <input type="number" name="max_participants" required class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+
+        <div>
+            <label class="block text-lg font-medium text-gray-700">Event Image (Optional):</label>
+            <input type="file" name="event_image" accept=".jpg,.jpeg,.png,.svg,.webp,.bmp,.gif" class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none">
+        </div>
+
+        <div>
+            <label class="block text-lg font-medium text-gray-700">Event Banner (Optional):</label>
+            <input type="file" name="event_banner" accept=".jpg,.jpeg,.png,.svg,.webp,.bmp,.gif" class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none">
+        </div>
+
+        <div class="text-center">
+            <button type="submit" class="bg-blue-500 text-white font-semibold px-6 py-3 rounded-md shadow-md hover:bg-blue-600 transition duration-300 ease-in-out focus:outline-none focus:ring-4 focus:ring-blue-300">
+                Add Event
+            </button>
+        </div>
+    </form>
+</div>

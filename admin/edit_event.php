@@ -89,44 +89,74 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 ?>
+<script src="https://cdn.tailwindcss.com"></script>
 
-<h1>Edit Event</h1>
+<h1 class="text-center text-2xl font-bold my-6 lg:my-8">Edit Event</h1>
 
 <?php if (!empty($uploadError)): ?>
-    <p style="color: red;"><?= $uploadError ?></p>
+    <p class="text-center text-red-500 font-semibold mb-4"><?= $uploadError ?></p>
 <?php endif; ?>
 
-<form method="POST" enctype="multipart/form-data">
-    <label>Event Title:</label>
-    <input type="text" name="title" value="<?= htmlspecialchars($event['title']) ?>" required>
-    
-    <label>Description:</label>
-    <textarea name="description" required><?= htmlspecialchars($event['description']) ?></textarea>
-    
-    <label>Event Date:</label>
-    <input type="date" name="event_date" value="<?= htmlspecialchars($event['event_date']) ?>" required>
-    
-    <label>Event Time:</label>
-    <input type="time" name="event_time" value="<?= htmlspecialchars($event['event_time']) ?>" required>
-    
-    <label>Location:</label>
-    <input type="text" name="location" value="<?= htmlspecialchars($event['location']) ?>" required>
-    
-    <label>Max Participants:</label>
-    <input type="number" name="max_participants" value="<?= htmlspecialchars($event['max_participants']) ?>" required>
-    
-    <label>Status:</label>
-    <select name="status">
-        <option value="open" <?= $event['status'] == 'open' ? 'selected' : '' ?>>Open</option>
-        <option value="closed" <?= $event['status'] == 'closed' ? 'selected' : '' ?>>Closed</option>
-        <option value="canceled" <?= $event['status'] == 'canceled' ? 'selected' : '' ?>>Canceled</option>
-    </select>
-    
-    <label>Event Image (Optional - Current: <?= htmlspecialchars($event['image']) ?>):</label>
-    <input type="file" name="event_image" accept=".jpg,.jpeg,.png,.svg,.webp,.bmp,.gif">
-    
-    <label>Event Banner (Optional - Current: <?= htmlspecialchars($event['banner']) ?>):</label>
-    <input type="file" name="event_banner" accept=".jpg,.jpeg,.png,.svg,.webp,.bmp,.gif">
-    
-    <button type="submit">Update Event</button>
-</form>
+<div class="max-w-3xl mx-auto bg-white p-6 md:p-10 shadow-lg rounded-lg mb-12">
+    <form method="POST" enctype="multipart/form-data" class="space-y-6">
+        <div>
+            <label class="block text-lg font-medium text-gray-700 mb-1">Event Title:</label>
+            <input type="text" name="title" value="<?= htmlspecialchars($event['title']) ?>" required class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+
+        <div>
+            <label class="block text-lg font-medium text-gray-700 mb-1">Description:</label>
+            <textarea name="description" required class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" rows="5"><?= htmlspecialchars($event['description']) ?></textarea>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <label class="block text-lg font-medium text-gray-700 mb-1">Event Date:</label>
+                <input type="date" name="event_date" value="<?= htmlspecialchars($event['event_date']) ?>" required class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <div>
+                <label class="block text-lg font-medium text-gray-700 mb-1">Event Time:</label>
+                <input type="time" name="event_time" value="<?= htmlspecialchars($event['event_time']) ?>" required class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+        </div>
+
+        <div>
+            <label class="block text-lg font-medium text-gray-700 mb-1">Location:</label>
+            <input type="text" name="location" value="<?= htmlspecialchars($event['location']) ?>" required class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+
+        <div>
+            <label class="block text-lg font-medium text-gray-700 mb-1">Max Participants:</label>
+            <input type="number" name="max_participants" value="<?= htmlspecialchars($event['max_participants']) ?>" required class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+
+        <div>
+            <label class="block text-lg font-medium text-gray-700 mb-1">Status:</label>
+            <select name="status" class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option value="open" <?= $event['status'] == 'open' ? 'selected' : '' ?>>Open</option>
+                <option value="closed" <?= $event['status'] == 'closed' ? 'selected' : '' ?>>Closed</option>
+                <option value="canceled" <?= $event['status'] == 'canceled' ? 'selected' : '' ?>>Canceled</option>
+            </select>
+        </div>
+
+        <div>
+            <label class="block text-lg font-medium text-gray-700 mb-1">Event Image (Optional - Current: <?= htmlspecialchars($event['image']) ?>):</label>
+            <input type="file" name="event_image" accept=".jpg,.jpeg,.png,.svg,.webp,.bmp,.gif" class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none">
+        </div>
+
+        <div>
+            <label class="block text-lg font-medium text-gray-700 mb-1">Event Banner (Optional - Current: <?= htmlspecialchars($event['banner']) ?>):</label>
+            <input type="file" name="event_banner" accept=".jpg,.jpeg,.png,.svg,.webp,.bmp,.gif" class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none">
+        </div>
+
+        <div class="text-center flex justify-center space-x-4">
+            <button type="submit" class="bg-blue-500 text-white font-semibold px-6 py-3 rounded-md shadow-md hover:bg-blue-600 transition duration-300 ease-in-out focus:outline-none focus:ring-4 focus:ring-blue-300">
+                Update Event
+            </button>
+            <a href="manage_events.php" class="bg-red-500 text-white font-semibold px-6 py-3 rounded-md shadow-md hover:bg-red-700 transition duration-300 ease-in-out focus:outline-none focus:ring-4 focus:ring-gray-300">
+                Cancel
+            </a>
+        </div>
+    </form> 
+</div>
