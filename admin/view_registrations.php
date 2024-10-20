@@ -14,23 +14,24 @@ $registrations = $stmt->fetchAll();
 if (isset($_GET['export']) && $_GET['export'] == 'csv') {
     ob_clean(); 
 
-    header('Content-Type: text/csv');
+    header('Content-Type: text/csv; charset=UTF-8');
     header('Content-Disposition: attachment;filename=registrations.csv');
     
     $output = fopen('php://output', 'w');
 
-    fputcsv($output, ['UserName', 'Email', 'Event Title']);
+    $delimiter = ';';
+
+    fputcsv($output, ['UserName', 'Email', 'Event Title'], $delimiter);
 
     foreach ($registrations as $registration) {
         fputcsv($output, [
             $registration['name'],
             $registration['email'],
             $registration['title']
-        ]);
+        ], $delimiter);
     }
 
     fclose($output);
-
     exit;
 }
 ?>
