@@ -7,6 +7,7 @@ if ($_SESSION['role'] != 'admin') {
     exit;
 }
 
+// Query events and count the number of registrations
 $stmt = $pdo->query("SELECT e.*, (SELECT COUNT(*) FROM registrations r WHERE r.event_id = e.event_id) AS total_registrations FROM events e");
 $events = $stmt->fetchAll();
 ?>
@@ -19,8 +20,18 @@ $events = $stmt->fetchAll();
 <div class="grid grid-cols-1 gap-6 px-4 sm:grid-cols-2 lg:grid-cols-3">
     <?php foreach ($events as $event): ?>
         <div class="border rounded-lg shadow-md p-4 text-left transition-all duration-300 ease-in-out hover:bg-[#2D364C] hover:text-white">
-            <img src="../assets/images/<?= $event['banner'] ?>?v=<?= time() ?>" alt="<?= $event['title'] ?> Banner" class="w-full h-48 object-cover rounded-md mb-4">
-            <h2 class="text-xl font-semibold mb-2"><?= $event['title'] ?></h2>
+            <?php
+            // Ensure the image file exists
+            $banner_path = '../uploads/banner/' . htmlspecialchars($event['banner']);
+            if (file_exists($banner_path)):
+            ?>
+                <img src="<?= $banner_path ?>?v=<?= time() ?>" alt="<?= htmlspecialchars($event['title']) ?> Banner" class="w-full h-48 object-cover rounded-md mb-4">
+            <?php else: ?>
+                <!-- Display a default image if the file does not exist -->
+                <img src="../uploads/banner/default-banner.png" alt="Default Banner" class="w-full h-48 object-cover rounded-md mb-4">
+            <?php endif; ?>
+            
+            <h2 class="text-xl font-semibold mb-2"><?= htmlspecialchars($event['title']) ?></h2>
             <p class="mb-4"><?= $event['total_registrations'] ?> registrants</p> 
             <button onclick="showDetails(<?= $event['event_id'] ?>)" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                 Details
@@ -72,7 +83,7 @@ $events = $stmt->fetchAll();
             .then(event => {
                 const data = event.split('|'); 
                 document.getElementById('popup-title').innerText = data[0]; 
-                document.getElementById('popup-image').src = '../assets/images/' + data[1] + '?v=' + new Date().getTime();
+                document.getElementById('popup-image').src = '../uploads/event-images/' + data[1] + '?v=' + new Date().getTime();
                 document.getElementById('popup-description').innerText = data[2]; 
                 document.getElementById('popup-date-time').innerText = `Date: ${data[3]}, Time: ${data[4]}`; 
                 document.getElementById('popup-location').innerText = `Location: ${data[5]}`;

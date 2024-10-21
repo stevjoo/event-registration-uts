@@ -34,6 +34,7 @@
                     <li><a href="../admin/add_event.php" class="hover:text-gray-400">Add Event</a></li>
                     <li><a href="../admin/view_users.php" class="hover:text-gray-400">View Users</a></li>
                     <li><a href="../admin/view_registrations.php" class="hover:text-gray-400">View Registrations</a></li>
+                    <li><a href="../admin/view_profile.php" class="hover:text-gray-400">Profile</a></li>
                 <?php elseif ($_SESSION['role'] === 'user'): ?>
                     <li><a href="../user/view_events.php" class="hover:text-gray-400">Home</a></li>
                     <li><a href="../user/registered_event.php" class="hover:text-gray-400">Registered Event</a></li>
@@ -54,6 +55,7 @@
                 <li><a href="../admin/add_event.php" class="hover:text-gray-400">Add Event</a></li>
                 <li><a href="../admin/view_users.php" class="hover:text-gray-400">View Users</a></li>
                 <li><a href="../admin/view_registrations.php" class="hover:text-gray-400">View Registrations</a></li>
+                <li><a href="../admin/view_profile.php" class="hover:text-gray-400">Profile</a></li>
             <?php elseif ($_SESSION['role'] === 'user'): ?>
                 <li><a href="../user/view_events.php" class="hover:text-gray-400">Home</a></li>
                 <li><a href="../user/registered_event.php" class="hover:text-gray-400">Registered Event</a></li>

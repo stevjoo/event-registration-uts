@@ -19,23 +19,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt->execute(['name' => $name]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // If username exists, proceed to check email and phone
+        // If username exists, proceed to check role, email, and phone
         if ($user) {
-            if (!empty($email) && !empty($phone)) {
-                $stmt = $pdo->prepare("SELECT * FROM users WHERE email = :email AND phone = :phone");
-                $stmt->execute(['email' => $email, 'phone' => $phone]);
-                $user_details = $stmt->fetch(PDO::FETCH_ASSOC);
-
-                if ($user_details) {
-                    // User found with matching email and phone
-                    $_SESSION['user_id'] = $user_details['id'];
-                    header("Location: ./change_password.php");
-                    exit();
-                } else {
-                    $error = "Invalid email or phone number.";
-                }
+            if ($user['role'] == 'admin') {
+                $error = "Admin users are not allowed to use the forgot password feature.";
             } else {
-                $error = "Please enter both email and phone number.";
+                if (!empty($email) && !empty($phone)) {
+                    $stmt = $pdo->prepare("SELECT * FROM users WHERE email = :email AND phone = :phone");
+                    $stmt->execute(['email' => $email, 'phone' => $phone]);
+                    $user_details = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                    if ($user_details) {
+                        // User found with matching email and phone
+                        $_SESSION['user_id'] = $user_details['id'];
+                        header("Location: ./change_password.php");
+                        exit();
+                    } else {
+                        $error = "Invalid email or phone number.";
+                    }
+                } else {
+                    $error = "Please enter both email and phone number.";
+                }
             }
         } else {
             $error = "User not found.";
@@ -112,4 +116,3 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </script>
 </body>
 </html>
-

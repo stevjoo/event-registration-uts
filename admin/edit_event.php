@@ -1,5 +1,5 @@
 <?php 
-session_start(); // Mulai session di awal file
+session_start(); 
 
 if (!isset($_SESSION['role']) || $_SESSION['role'] != 'admin') {
     header('Location: /login.php');
@@ -16,21 +16,25 @@ try {
     exit;
 }
 
-if (isset($_GET['event_id'])) {
-    $event_id = $_GET['event_id'];
-
-    $stmt = $pdo->prepare("SELECT * FROM events WHERE event_id = ?");
-    $stmt->execute([$event_id]);
-    $event = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if (!$event) {
-        echo "Event not found.";
-        exit;
-    }
-} else {
-    echo "No event ID provided.";
+if (!isset($_GET['event_id'])) {
+    header("Location: manage_events.php"); 
     exit;
 }
+
+$event_id = $_GET['event_id'];
+
+// Fetch the existing event data
+$stmt = $pdo->prepare("SELECT * FROM events WHERE event_id = :event_id");
+$stmt->execute(['event_id' => $event_id]);
+$event = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if (!$event) {
+    echo "Event not found.";
+    exit;
+}
+
+$uploadError = '';
+$allowed_extensions = ['jpg', 'jpeg', 'png', 'svg', 'webp', 'bmp', 'gif'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = $_POST['title'];
@@ -39,46 +43,65 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $event_time = $_POST['event_time'];
     $location = $_POST['location'];
     $max_participants = $_POST['max_participants'];
-    $uploadError = '';
+    $status = $_POST['status'];
 
+    // Handle event image
+    $imageName = $event['image']; 
     if (isset($_FILES['event_image']) && $_FILES['event_image']['error'] === 0) {
-        $allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
-        $imageFile = $_FILES['event_image'];
-        if (in_array($imageFile['type'], $allowedTypes)) {
-            $imageName = time() . '-' . basename($imageFile['name']);
-            $imagePath = '../uploads/images/' . $imageName;
-            if (!move_uploaded_file($imageFile['tmp_name'], $imagePath)) {
+        $image = $_FILES['event_image'];
+        $image_ext = pathinfo($image['name'], PATHINFO_EXTENSION);
+
+        if (in_array(strtolower($image_ext), $allowed_extensions)) {
+            if (!empty($event['image']) && file_exists('../assets/images/' . $event['image'])) {
+                unlink('../assets/images/' . $event['image']);
+            }
+
+            $imageName = uniqid() . '.' . $image_ext;
+            $imagePath = '../assets/images/' . $imageName;
+            if (!move_uploaded_file($image['tmp_name'], $imagePath)) {
                 $uploadError = 'Error uploading image.';
             }
         } else {
-            $uploadError = 'Invalid image type.';
+            $uploadError = 'Invalid file type for event image. Only jpg, jpeg, png, svg, webp, bmp, gif files are allowed.';
         }
-    } else {
-        $imageName = $event['event_image'];
     }
 
+    // Handle event banner
+    $bannerName = $event['banner'];
     if (isset($_FILES['event_banner']) && $_FILES['event_banner']['error'] === 0) {
-        $allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
-        $bannerFile = $_FILES['event_banner'];
-        if (in_array($bannerFile['type'], $allowedTypes)) {
-            $bannerName = time() . '-' . basename($bannerFile['name']);
-            $bannerPath = '../uploads/banners/' . $bannerName;
-            if (!move_uploaded_file($bannerFile['tmp_name'], $bannerPath)) {
+        $banner = $_FILES['event_banner'];
+        $banner_ext = pathinfo($banner['name'], PATHINFO_EXTENSION);
+
+        if (in_array(strtolower($banner_ext), $allowed_extensions)) {
+            if (!empty($event['banner']) && file_exists('../assets/images/' . $event['banner'])) {
+                unlink('../assets/images/' . $event['banner']);
+            }
+
+            $bannerName = uniqid() . '_banner.' . $banner_ext;
+            $bannerPath = '../assets/images/' . $bannerName;
+            if (!move_uploaded_file($banner['tmp_name'], $bannerPath)) {
                 $uploadError = 'Error uploading banner.';
             }
         } else {
-            $uploadError = 'Invalid banner type.';
+            $uploadError = 'Invalid file type for event banner. Only jpg, jpeg, png, svg, webp, bmp, gif files are allowed.';
         }
-    } else {
-        $bannerName = $event['event_banner']; 
     }
 
     if (empty($uploadError)) {
-        $stmt = $pdo->prepare("UPDATE events SET title = ?, description = ?, event_date = ?, event_time = ?, location = ?, max_participants = ?, event_image = ?, event_banner = ?
-                               WHERE event_id = ?");
-        $stmt->execute([$title, $description, $event_date, $event_time, $location, $max_participants, $imageName, $bannerName, $event_id]);
-
-        header('Location: /admin/view_events.php');
+        $stmt = $pdo->prepare("UPDATE events SET title = :title, description = :description, event_date = :event_date, event_time = :event_time, location = :location, max_participants = :max_participants, status = :status, image = :image, banner = :banner WHERE event_id = :event_id");
+        $stmt->execute([
+            'title' => $title,
+            'description' => $description,
+            'event_date' => $event_date,
+            'event_time' => $event_time,
+            'location' => $location,
+            'max_participants' => $max_participants,
+            'status' => $status,
+            'image' => $imageName,
+            'banner' => $bannerName,
+            'event_id' => $event_id
+        ]);
+        header("Location: manage_events.php");
         exit;
     }
 }
@@ -171,20 +194,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                            class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm text-gray-900 focus:ring focus:ring-indigo-500 focus:border-indigo-500">
                 </div>
 
-                <!-- Event Image Input -->
+                <!-- Status Select Input -->
                 <div class="fade-in opacity-0 transition-opacity duration-500 delay-700">
-                    <label class="block text-sm font-medium">Event Image (Optional):</label>
+                    <label class="block text-sm font-medium">Status:</label>
+                    <select name="status" class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <option value="open" <?= $event['status'] == 'open' ? 'selected' : '' ?>>Open</option>
+                        <option value="closed" <?= $event['status'] == 'closed' ? 'selected' : '' ?>>Closed</option>
+                        <option value="canceled" <?= $event['status'] == 'canceled' ? 'selected' : '' ?>>Canceled</option>
+                    </select>
+                </div>
+
+                <!-- Event Image Input -->
+                <div class="fade-in opacity-0 transition-opacity duration-500 delay-800">
+                    <label class="block text-sm font-medium">Event Image (Optional - Current: <?= htmlspecialchars($event['image']) ?>):</label>
                     <input type="file" name="event_image" accept=".jpg,.jpeg,.png,.svg,.webp,.bmp,.gif"
                            class="mt-1 w-full text-gray-900 border border-gray-300 rounded-md shadow-sm">
                 </div>
 
-                <div class="fade-in opacity-0 transition-opacity duration-500 delay-800">
-                    <label class="block text-sm font-medium">Event Banner (Optional):</label>
+                <!-- Event Banner Input -->
+                <div class="fade-in opacity-0 transition-opacity duration-500 delay-900">
+                    <label class="block text-sm font-medium">Event Banner (Optional - Current: <?= htmlspecialchars($event['banner']) ?>):</label>
                     <input type="file" name="event_banner" accept=".jpg,.jpeg,.png,.svg,.webp,.bmp,.gif"
                            class="mt-1 w-full text-gray-900 border border-gray-300 rounded-md shadow-sm">
                 </div>
 
-                <div class="fade-in opacity-0 transition-opacity duration-500 delay-900">
+                <div class="fade-in opacity-0 transition-opacity duration-500 delay-1000">
                     <button type="submit"
                             class="w-full py-2 px-4 bg-indigo-600 text-white font-bold rounded-md shadow hover:bg-indigo-700 transition-all duration-300">
                         Update Event
