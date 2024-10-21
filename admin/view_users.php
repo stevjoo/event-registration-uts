@@ -1,135 +1,113 @@
 <?php
 session_start();
-require '../includes/db_connection.php';
 
-if ($_SESSION['role'] != 'admin') {
-    header("Location: ../index.php");
-    exit;
+try {
+    $pdo = new PDO('mysql:host=localhost;dbname=event_management', 'root', '');
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    $stmt = $pdo->prepare("SELECT id, name, email, role, created_at FROM users");
+    $stmt->execute();
+    $users = $stmt->fetchAll(PDO::FETCH_ASSOC); 
+} catch (PDOException $e) {
+    echo "Error: " . $e->getMessage();
+    $users = []; 
 }
 
-$stmt = $pdo->query("SELECT * FROM users");
-$users = $stmt->fetchAll();
+// Retrieve the message from the session
+$message = isset($_SESSION['message']) ? $_SESSION['message'] : "";
+unset($_SESSION['message']);  
 ?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Users</title>
+    <!-- Include SweetAlert2 library -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa; 
+        }
+        h1 {
+            margin: 20px 0;
+            text-align: center;
+            color: #343a40;
+        }
+        
+    </style>
+</head>
+<body>
 
 <?php include '../includes/navbar.php'; ?>
 
+<div class="container mt-5">
 <h1 class="text-center text-2xl font-bold my-6">View Users</h1>
 
-<div class="overflow-x-auto mx-4 md:mx-24">
-    <table class="w-full">
-        <thead>
-            <tr>
-                <th class="p-2 border">ID</th>
-                <th class="p-2 border">Name</th>
-                <th class="p-2 border">Email</th>
-                <th class="p-2 border">Role</th>
-                <th class="p-2 border">Registration Date</th>
-                <th class="p-2 border">Action</th> 
-            </tr>
-        </thead>
-        <tbody>
-            <?php if (count($users) > 0): ?>
-                <?php foreach ($users as $user): ?>
-                    <tr>
-                        <td class="p-2 border"><?= htmlspecialchars($user['id']) ?></td>
-                        <td class="p-2 border"><?= htmlspecialchars($user['name']) ?></td>
-                        <td class="p-2 border"><?= htmlspecialchars($user['email']) ?></td>
-                        <td class="p-2 border"><?= htmlspecialchars($user['role']) ?></td>
-                        <td class="p-2 border"><?= htmlspecialchars($user['created_at']) ?></td>
-                        <td class="p-2 border">
-                            <?php if ($user['role'] != 'admin'): ?>
-                                <button class="btn_delete" onclick="confirmDeleteUser(<?= $user['id'] ?>)">Delete</button>
-                            <?php endif; ?>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            <?php else: ?>
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead class="thead-dark">
                 <tr>
-                    <td colspan="6" class="p-2 border text-center">No users found.</td>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Registration Date</th>
+                    <th>Action</th>
                 </tr>
-            <?php endif; ?>
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                <?php if (isset($users) && count($users) > 0): ?>
+                    <?php foreach ($users as $user): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($user['id']) ?></td>
+                            <td><?= htmlspecialchars($user['name']) ?></td>
+                            <td><?= htmlspecialchars($user['email']) ?></td>
+                            <td><?= htmlspecialchars($user['role']) ?></td>
+                            <td><?= htmlspecialchars($user['created_at']) ?></td>
+                            <td>
+                                <?php if ($user['role'] !== 'admin'): ?>
+                                    <button class="btn btn-danger" onclick="confirmDeleteUser(<?= $user['id'] ?>)">Delete</button>
+                                <?php else: ?>
+                                    <span class="text-muted">Admin cannot be deleted</span>
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="6" class="text-center">No users found.</td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <script>
     function confirmDeleteUser(userId) {
-        const confirmDelete = confirm('Are you sure you want to delete this user? This action cannot be undone.');
-        if (confirmDelete) {
-            deleteUser(userId);
+        if (confirm('Are you sure you want to delete this user?')) {
+            window.location.href = 'delete_user.php?id=' + userId;
         }
     }
 
-    function deleteUser(userId) {
-        fetch(`delete_user.php?id=${userId}`, {
-            method: 'POST',
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to delete user');
-            }
-            return response.text();
-        })
-        .then(result => {
-            alert('User deleted successfully!');
-            location.reload();  
-        })
-        .catch(error => {
-            console.error('Error deleting user:', error);
-            alert('An error occurred while trying to delete the user.');
+    // Check if there is a message and show SweetAlert notification
+    <?php if (!empty($message)): ?>
+        Swal.fire({
+            title: 'Notification',
+            text: '<?php echo $message; ?>',
+            icon: '<?php echo strpos($message, "successfully") !== false ? "success" : "error"; ?>',
+            confirmButtonText: 'OK'
         });
-    }
+    <?php endif; ?>
 </script>
 
-<style>
-    table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-    th, td {
-        padding: 10px;
-        border: 1px solid #ddd;
-        text-align: left;
-    }
-    th {
-        background-color: #f2f2f2;
-    }
-    .btn_delete {
-        padding: 5px 10px;
-        background-color: #dc3545;
-        color: white;
-        border: none;
-        border-radius: 3px;
-        cursor: pointer;
-    }
-    .btn_delete:hover {
-        background-color: #c82333;
-    }
-    
-    /* Responsive Styles */
-    @media (max-width: 768px) {
-        table {
-            font-size: 0.9em;
-        }
-        th, td {
-            padding: 8px;
-        }
-        .mx-24 {
-            margin-left: 1rem;
-            margin-right: 1rem;
-        }
-    }
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-    @media (max-width: 480px) {
-        table {
-            font-size: 0.8em;
-        }
-        th, td {
-            padding: 5px;
-        }
-        .btn_delete {
-            padding: 3px 7px;
-            font-size: 0.8em;
-        }
-    }
-</style>
+</body>
+</html>

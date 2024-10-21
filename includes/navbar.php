@@ -1,7 +1,23 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <nav class="bg-gray-800 p-4">
     <div class="container mx-auto flex justify-between items-center">
-        <a href="#" class="text-white font-bold text-xl">My Website</a>
+        <!-- Dynamic link based on user role -->
+        <a href="
+            <?php 
+                if (isset($_SESSION['role'])) {
+                    if ($_SESSION['role'] === 'admin') {
+                        echo '../admin/manage_events.php';
+                    } elseif ($_SESSION['role'] === 'user') {
+                        echo '../user/view_events.php';
+                    }
+                } else {
+                    echo '#'; // Default link when no session
+                }
+            ?>" 
+            class="text-white font-bold text-xl"
+        >
+            My Website
+        </a>
 
         <div class="block lg:hidden">
             <button id="menu-toggle" class="text-white focus:outline-none">

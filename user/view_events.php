@@ -17,8 +17,8 @@ $events = $stmt->fetchAll();
 
 <div class="grid grid-cols-1 gap-6 px-4 sm:grid-cols-2 lg:grid-cols-3">
     <?php foreach ($events as $event): ?>
-        <div class="border rounded-lg shadow-md p-4 text-left">
-            <img src="../assets/images/<?= $event['banner'] ?>?v=<?= time() ?>" alt="<?= $event['title'] ?> Banner" class="w-full h-48 shadow-md object-cover rounded-md mb-4">
+        <div class="border rounded-lg shadow-md p-4 text-left transition-all duration-300 hover:bg-[#2D364C] hover:shadow-xl hover:text-white">
+            <img src="../assets/images/<?= $event['banner'] ?>?v=<?= time() ?>" alt="<?= $event['title'] ?> Banner" class="w-full h-48 object-cover rounded-md mb-4 shadow-md">
             <h2 class="text-xl font-semibold mb-2"><?= $event['title'] ?></h2>
             <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="showDetails(<?= $event['event_id'] ?>)">Details</button>
         </div>
@@ -41,7 +41,6 @@ $events = $stmt->fetchAll();
         <p id="popup-location" class="text-lg font-normal mb-2"></p>
         
         <div class="flex justify-around mt-6">
-            <!-- <button class="close-btn" onclick="closePopup()">Close</button> -->
             <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="registerEvent(<?= $event['event_id'] ?>)">Register</button>
         </div>
     </div>
@@ -78,32 +77,32 @@ $events = $stmt->fetchAll();
         document.getElementById('event-popup').style.display = 'none';
     }
 
-function registerEvent() {
-    const userId = <?= $_SESSION['user_id'] ?>; 
+    function registerEvent() {
+        const userId = <?= $_SESSION['user_id'] ?>; 
 
-    fetch('register_event.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: `event_id=${currentEventId}&user_id=${userId}` 
-    })
-    .then(response => {
-        return response.json(); 
-    })
-    .then(data => {
-        if (data.status === 'success') {
-            alert('You have successfully registered for the event!');
-            closePopup(); 
-        } else {
-            alert(`Registration failed: ${data.message}`); 
-        }
-    })
-    .catch(error => {
-        console.error('Error registering for event:', error);
-        alert('There was an error registering for the event. Please try again.');
-    });
-}
+        fetch('register_event.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `event_id=${currentEventId}&user_id=${userId}` 
+        })
+        .then(response => {
+            return response.json(); 
+        })
+        .then(data => {
+            if (data.status === 'success') {
+                alert('You have successfully registered for the event!');
+                closePopup(); 
+            } else {
+                alert(`Registration failed: ${data.message}`); 
+            }
+        })
+        .catch(error => {
+            console.error('Error registering for event:', error);
+            alert('There was an error registering for the event. Please try again.');
+        });
+    }
 
 </script>
 

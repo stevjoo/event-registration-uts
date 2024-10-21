@@ -1,15 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Event Registrations</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa; 
+        }
+        h1 {
+            margin: 20px 0;
+            color: #343a40; 
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+
 <?php
 session_start();
-require '../includes/db_connection.php';
 
 if ($_SESSION['role'] != 'admin') {
-    header("Location: ../index.php");
+    header('Location: ../index.php');
     exit;
 }
 
-$stmt = $pdo->query("SELECT users.name, users.email, events.title FROM registrations JOIN users ON registrations.id = users.id JOIN events ON registrations.event_id = events.event_id");
+include '../includes/navbar.php';
 
-$registrations = $stmt->fetchAll();
+try {
+    $pdo = new PDO('mysql:host=localhost;dbname=event_management', 'root', '');
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    $stmt = $pdo->prepare("
+        SELECT u.name, u.email, e.title 
+        FROM registrations r
+        JOIN users u ON r.id = u.id
+        JOIN events e ON r.event_id = e.event_id
+        ORDER BY r.registered_at DESC
+    ");
+    $stmt->execute();
+    $registrations = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+} catch (PDOException $e) {
+    echo "Error: " . $e->getMessage();
+    $registrations = []; 
+}
 
 if (isset($_GET['export']) && $_GET['export'] == 'csv') {
     ob_clean(); 
@@ -36,79 +84,45 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
 }
 ?>
 
-<?php include '../includes/navbar.php'; ?>
+<div class="container mt-5">
+    <h1 class="text-center text-2xl font-bold my-6">View Event Registrations</h1>
 
-<h1 class="text-center text-2xl font-bold my-6">View Event Registrations</h1>
+    <!-- Export CSV Button -->
+    <a href="view_registrations.php?export=csv" class="btn btn-primary mb-3">Export CSV</a>
 
-<div class="overflow-x-auto mx-4 md:mx-24">
-    <table class="w-full">
-        <thead>
-            <tr>    
-                <th class="p-2 border">UserName</th>
-                <th class="p-2 border">Email</th>
-                <th class="p-2 border">Event Title</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php if (count($registrations) > 0): ?>
-                <?php foreach ($registrations as $registration): ?>
-                    <tr>
-                        <td class="p-2 border"><?= htmlspecialchars($registration['name']) ?></td>
-                        <td class="p-2 border"><?= htmlspecialchars($registration['email']) ?></td>
-                        <td class="p-2 border"><?= htmlspecialchars($registration['title']) ?></td>
-                    </tr>
-                <?php endforeach; ?>
-            <?php else: ?>
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead class="thead-dark">
                 <tr>
-                    <td colspan="3" class="p-2 border text-center">No registrations found.</td>
+                    <th>UserName</th>
+                    <th>Email</th>
+                    <th>Event Title</th>
                 </tr>
-            <?php endif; ?>
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+
+            <?php if (isset($registrations) && count($registrations) > 0): ?>
+                    <?php foreach ($registrations as $registration): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($registration['name']) ?></td>
+                            <td><?= htmlspecialchars($registration['email']) ?></td>
+                            <td><?= htmlspecialchars($registration['title']) ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="3" class="text-center">No registrations found.</td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
 </div>
 
-<a href="view_registrations.php?export=csv" class="flex mt-12 mx-auto justify-center bg-blue-500 text-white px-4 py-4 rounded-md shadow-md hover:bg-blue-600 transition duration-300 ease-in-out w-[120px]">
-    Export CSV
-</a>
+<!-- Include Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-
-<style>
-    table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-    th, td {
-        padding: 10px;
-        border: 1px solid #ddd;
-        text-align: left;
-    }
-    th {
-        background-color: #f2f2f2;
-    }
-    
-    @media (max-width: 768px) {
-        table {
-            font-size: 0.9em;
-        }
-        th, td {
-            padding: 8px;
-        }
-        .mx-24 {
-            margin-left: 1rem;
-            margin-right: 1rem;
-        }
-    }
-
-    @media (max-width: 480px) {
-        table {
-            font-size: 0.8em;
-        }
-        th, td {
-            padding: 5px;
-        }
-        .btn {
-            padding: 2px 4px;
-            font-size: 0.8em;
-        }
-    }
-</style>
+</body>
+</html>

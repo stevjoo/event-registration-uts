@@ -7,6 +7,8 @@ if ($_SESSION['role'] != 'admin') {
     exit;
 }
 
+$message = "";  
+
 if (isset($_GET['id'])) {
     $user_id = $_GET['id'];
 
@@ -16,21 +18,26 @@ if (isset($_GET['id'])) {
 
     if ($user) {
         if ($user['role'] == 'admin') {
-            echo "Admin users cannot be deleted.";
+            $message = "Admin users cannot be deleted.";
         } else {
             $stmt = $pdo->prepare("DELETE FROM users WHERE id = :id");
             $stmt->execute(['id' => $user_id]);
 
             if ($stmt->rowCount()) {
-                echo "User deleted successfully";
+                $message = "User deleted successfully.";
             } else {
-                echo "Error deleting user";
+                $message = "Error deleting user.";
             }
         }
     } else {
-        echo "User not found.";
+        $message = "User not found.";
     }
 } else {
-    echo "No user ID provided";
+    $message = "No user ID provided.";
 }
+
+$_SESSION['message'] = $message;
+
+header("Location: view_users.php");
+exit;
 ?>

@@ -18,10 +18,10 @@ $events = $stmt->fetchAll();
 
 <div class="grid grid-cols-1 gap-6 px-4 sm:grid-cols-2 lg:grid-cols-3">
     <?php foreach ($events as $event): ?>
-        <div class="border rounded-lg shadow-md p-4 text-left">
+        <div class="border rounded-lg shadow-md p-4 text-left transition-all duration-300 ease-in-out hover:bg-[#2D364C] hover:text-white">
             <img src="../assets/images/<?= $event['banner'] ?>?v=<?= time() ?>" alt="<?= $event['title'] ?> Banner" class="w-full h-48 object-cover rounded-md mb-4">
             <h2 class="text-xl font-semibold mb-2"><?= $event['title'] ?></h2>
-            <p class="text-gray-600 mb-4"><?= $event['total_registrations'] ?> registrants</p> 
+            <p class="mb-4"><?= $event['total_registrations'] ?> registrants</p> 
             <button onclick="showDetails(<?= $event['event_id'] ?>)" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                 Details
             </button>
@@ -31,7 +31,6 @@ $events = $stmt->fetchAll();
 
 <div id="event-popup" class="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center" style="display:none;">
     <div class="relative bg-white p-12 rounded-lg shadow-lg w-11/12 max-w-lg text-center">
-        <!-- Button 'X' di kanan atas -->
         <button class="absolute top-1 right-1 opacity-50 hover:opacity-100 text-xl font-bold px-3 py-3 rounded-full" onclick="closePopup()">
             <svg width="20px" height="20px" viewBox="-0.5 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M3 21.32L21 3.32001" stroke="#ff0000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M3 3.32001L21 21.32" stroke="#ff0000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
         </button>
@@ -56,7 +55,6 @@ $events = $stmt->fetchAll();
         </div>
     </div>
 </div>
-
 
 <script>
     let currentEventId; 
