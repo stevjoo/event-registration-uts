@@ -15,41 +15,42 @@ $events = $stmt->fetchAll();
 <script src="https://cdn.tailwindcss.com"></script>
 <?php include '../includes/navbar.php'; ?>
 
-<h1 class="text-center text-2xl font-bold my-6">Manage Events</h1>
-
-<div class="grid grid-cols-1 gap-6 px-4 sm:grid-cols-2 lg:grid-cols-3">
-    <?php foreach ($events as $event): ?>
-        <div class="border rounded-lg shadow-md p-4 text-left transition-all duration-300 ease-in-out hover:bg-[#2D364C] hover:text-white">
-            <?php
+<body class="bg-gradient-to-r from-green-200 to-blue-200">
+    <h1 class="text-center text-2xl font-bold my-6">Manage Events</h1>
+    
+    <div class="grid grid-cols-1 gap-6 px-4 sm:grid-cols-2 lg:grid-cols-3">
+        <?php foreach ($events as $event): ?>
+            <div class="border rounded-lg bg-white/50 shadow-md p-4 text-left transition-all duration-300 ease-in-out hover:bg-[#2D364C] hover:text-white">
+                <?php
             // Ensure the image file exists
             $banner_path = '../uploads/banner/' . htmlspecialchars($event['banner']);
             if (file_exists($banner_path)):
-            ?>
+                ?>
                 <img src="<?= $banner_path ?>?v=<?= time() ?>" alt="<?= htmlspecialchars($event['title']) ?> Banner" class="w-full h-48 object-cover rounded-md mb-4">
-            <?php else: ?>
-                <!-- Display a default image if the file does not exist -->
-                <img src="../uploads/banner/default-banner.png" alt="Default Banner" class="w-full h-48 object-cover rounded-md mb-4">
-            <?php endif; ?>
+                <?php else: ?>
+                    <!-- Display a default image if the file does not exist -->
+                    <img src="../uploads/banner/default-banner.png" alt="Default Banner" class="w-full h-48 object-cover rounded-md mb-4">
+                    <?php endif; ?>
+                    
+                    <h2 class="text-xl font-semibold mb-2"><?= htmlspecialchars($event['title']) ?></h2>
+                    <p class="mb-4"><?= $event['total_registrations'] ?> registrants</p> 
+                    <button onclick="showDetails(<?= $event['event_id'] ?>)" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        Details
+                    </button>
+                </div>
+                <?php endforeach; ?>
+            </div>
             
-            <h2 class="text-xl font-semibold mb-2"><?= htmlspecialchars($event['title']) ?></h2>
-            <p class="mb-4"><?= $event['total_registrations'] ?> registrants</p> 
-            <button onclick="showDetails(<?= $event['event_id'] ?>)" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                Details
-            </button>
+            <div id="event-popup" class="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center" style="display:none;">
+                <div class="relative bg-white p-12 rounded-lg shadow-lg w-11/12 max-w-lg text-center">
+                    <button class="absolute top-1 right-1 opacity-50 hover:opacity-100 text-xl font-bold px-3 py-3 rounded-full" onclick="closePopup()">
+                        <svg width="20px" height="20px" viewBox="-0.5 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M3 21.32L21 3.32001" stroke="#ff0000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M3 3.32001L21 21.32" stroke="#ff0000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                    </button>
+                    
+                    <div class="rounded-md border border-slate-300 border-1 p-2 shadow-md mb-4">
+                        <img id="popup-image" src="" alt="Event Image" class="w-full h-48 object-cover rounded-md">
         </div>
-    <?php endforeach; ?>
-</div>
-
-<div id="event-popup" class="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center" style="display:none;">
-    <div class="relative bg-white p-12 rounded-lg shadow-lg w-11/12 max-w-lg text-center">
-        <button class="absolute top-1 right-1 opacity-50 hover:opacity-100 text-xl font-bold px-3 py-3 rounded-full" onclick="closePopup()">
-            <svg width="20px" height="20px" viewBox="-0.5 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M3 21.32L21 3.32001" stroke="#ff0000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M3 3.32001L21 21.32" stroke="#ff0000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
-        </button>
         
-        <div class="rounded-md border border-slate-300 border-1 p-2 shadow-md mb-4">
-            <img id="popup-image" src="" alt="Event Image" class="w-full h-48 object-cover rounded-md">
-        </div>
-
         <h3 id="popup-title" class="text-3xl font-semibold mb-2"></h3>
         <p id="popup-description" class="text-lg font-normal mb-2"></p>
         <p id="popup-date-time" class="text-lg font-normal mb-2"></p>
@@ -66,10 +67,11 @@ $events = $stmt->fetchAll();
         </div>
     </div>
 </div>
+</body>
 
 <script>
     let currentEventId; 
-
+    
     function showDetails(eventId) {
         currentEventId = eventId; 
 

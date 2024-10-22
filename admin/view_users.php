@@ -40,7 +40,7 @@ unset($_SESSION['message']);
         
     </style>
 </head>
-<body>
+<body class="bg-gradient-to-r from-green-200 to-blue-200">
 
 <?php include '../includes/navbar.php'; ?>
 

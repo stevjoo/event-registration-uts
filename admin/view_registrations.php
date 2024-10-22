@@ -7,9 +7,6 @@
     <!-- Include Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-        body {
-            background-color: #f8f9fa; 
-        }
         h1 {
             margin: 20px 0;
             color: #343a40; 
@@ -84,6 +81,7 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
 }
 ?>
 
+<body class="bg-gradient-to-r from-green-200 to-blue-200">
 <div class="container mt-5">
     <h1 class="text-center text-2xl font-bold my-6">View Event Registrations</h1>
 
@@ -118,7 +116,7 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
         </table>
     </div>
 </div>
-
+</body>
 <!-- Include Bootstrap JS and dependencies -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>

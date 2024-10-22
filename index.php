@@ -21,7 +21,7 @@
     <div class="min-h-screen flex flex-col justify-center items-center">
         <div class="text-center mb-8">
             <h1 class="text-4xl font-bold text-white mb-4">Welcome to the Event Management System</h1>
-            <p class="text-gray-600 mb-8">Manage events and registrations efficiently with our system.</p>
+            <p class="text-gray-200 mb-8">Manage events and registrations efficiently with our system.</p>
         </div>
 
         <div class="flex justify-center gap-4 mt-6">

@@ -36,20 +36,21 @@ if (isset($_POST['cancel_event_id'])) {
 
 <?php include '../includes/navbar.php'; ?>
 
-<div class="event-history">
-    <h1 class="text-center text-2xl font-bold my-6">Your Event History</h1>
-
-    <?php if (count($events) > 0): ?>
-        <ul class="space-y-4">
-            <!-- Loop through each event and add animations -->
-            <?php foreach ($events as $index => $event): ?>
-                <li class="mx-16 px-4 py-2 pt-4 bg-slate-100 shadow-md rounded-lg flex flex-col justify-between transition-transform transform hover:scale-105 hover:shadow-lg animate__animated animate__fadeIn animate__delay-<?= $index * 100 ?>ms">
-                    <div>
-                        <strong class="text-3xl text-gray-800"><?= htmlspecialchars($event['title']) ?></strong>
-                        <p class="text-md text-gray-500">
-                            <?= htmlspecialchars($event['event_date']) ?>
-                        </p>
-                        <p class="text-md text-gray-500">
+<body class="bg-gradient-to-r from-blue-200 to-purple-200">
+    <div class="event-history">
+        <h1 class="text-center text-2xl font-bold my-6">Your Event History</h1>
+        
+        <?php if (count($events) > 0): ?>
+            <ul class="space-y-4">
+                <!-- Loop through each event and add animations -->
+                <?php foreach ($events as $index => $event): ?>
+                    <li class="mx-16 px-4 py-2 pt-4 bg-slate-100 shadow-md rounded-lg flex flex-col justify-between transition-transform transform hover:scale-105 hover:shadow-lg animate__animated animate__fadeIn animate__delay-<?= $index * 100 ?>ms">
+                        <div>
+                            <strong class="text-3xl text-gray-800"><?= htmlspecialchars($event['title']) ?></strong>
+                            <p class="text-md text-gray-500">
+                                <?= htmlspecialchars($event['event_date']) ?>
+                            </p>
+                            <p class="text-md text-gray-500">
                             <?= htmlspecialchars($event['event_time']) ?>
                             at <?= htmlspecialchars($event['location']) ?>
                         </p>
@@ -63,11 +64,12 @@ if (isset($_POST['cancel_event_id'])) {
                 </li>
             <?php endforeach; ?>
         </ul>
-    <?php else: ?>
-        <p class="text-gray-500 text-center">No event registrations found.</p>
-    <?php endif; ?>
-</div>
-
+        <?php else: ?>
+            <p class="text-gray-500 text-center">No event registrations found.</p>
+            <?php endif; ?>
+        </div>
+    </body>
+        
 <style>
     .event-history ul {
         list-style-type: none;

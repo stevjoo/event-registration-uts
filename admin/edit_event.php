@@ -115,10 +115,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Edit Event</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body {
-            background-color: white; 
-        }
-
         .form-container {
             background-color: #2D364C; 
             width: 80%; 
@@ -139,7 +135,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     </style>
 </head>
-<body>
+<body class="bg-gradient-to-r from-green-200 to-blue-200">
 <br>
     <div class="flex items-center justify-center min-h-screen">
         <div class="form-container shadow-lg transition-transform duration-300 transform hover:scale-105 fade-in">
