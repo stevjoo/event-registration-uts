@@ -23,7 +23,6 @@ if (!isset($_GET['event_id'])) {
 
 $event_id = $_GET['event_id'];
 
-// Fetch the existing event data
 $stmt = $pdo->prepare("SELECT * FROM events WHERE event_id = :event_id");
 $stmt->execute(['event_id' => $event_id]);
 $event = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -45,7 +44,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $max_participants = $_POST['max_participants'];
     $status = $_POST['status'];
 
-    // Handle event image
     $imageName = $event['image']; 
     if (isset($_FILES['event_image']) && $_FILES['event_image']['error'] === 0) {
         $image = $_FILES['event_image'];
@@ -66,7 +64,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // Handle event banner
     $bannerName = $event['banner'];
     if (isset($_FILES['event_banner']) && $_FILES['event_banner']['error'] === 0) {
         $banner = $_FILES['event_banner'];
@@ -146,51 +143,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <p class="text-red-500 text-center mb-4"><?= $uploadError ?></p>
             <?php endif; ?>
 
-            <!-- Form for Editing Event -->
             <form method="POST" enctype="multipart/form-data" class="space-y-4">
-                <!-- Event Title Input -->
                 <div class="fade-in opacity-0 transition-opacity duration-500 delay-100">
                     <label class="block text-sm font-medium">Event Title:</label>
                     <input type="text" name="title" value="<?= htmlspecialchars($event['title']) ?>" required
                            class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm text-gray-900 focus:ring focus:ring-indigo-500 focus:border-indigo-500">
                 </div>
 
-                <!-- Event Description Input -->
                 <div class="fade-in opacity-0 transition-opacity duration-500 delay-200">
                     <label class="block text-sm font-medium">Description:</label>
                     <textarea name="description" required
                               class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm text-gray-900 focus:ring focus:ring-indigo-500 focus:border-indigo-500"><?= htmlspecialchars($event['description']) ?></textarea>
                 </div>
 
-                <!-- Event Date Input -->
                 <div class="fade-in opacity-0 transition-opacity duration-500 delay-300">
                     <label class="block text-sm font-medium">Event Date:</label>
                     <input type="date" name="event_date" value="<?= htmlspecialchars($event['event_date']) ?>" required
                            class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm text-gray-900 focus:ring focus:ring-indigo-500 focus:border-indigo-500">
                 </div>
 
-                <!-- Event Time Input -->
                 <div class="fade-in opacity-0 transition-opacity duration-500 delay-400">
                     <label class="block text-sm font-medium">Event Time:</label>
                     <input type="time" name="event_time" value="<?= htmlspecialchars($event['event_time']) ?>" required
                            class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm text-gray-900 focus:ring focus:ring-indigo-500 focus:border-indigo-500">
                 </div>
 
-                <!-- Event Location Input -->
                 <div class="fade-in opacity-0 transition-opacity duration-500 delay-500">
                     <label class="block text-sm font-medium">Location:</label>
                     <input type="text" name="location" value="<?= htmlspecialchars($event['location']) ?>" required
                            class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm text-gray-900 focus:ring focus:ring-indigo-500 focus:border-indigo-500">
                 </div>
 
-                <!-- Max Participants Input -->
                 <div class="fade-in opacity-0 transition-opacity duration-500 delay-600">
                     <label class="block text-sm font-medium">Max Participants:</label>
                     <input type="number" name="max_participants" value="<?= htmlspecialchars($event['max_participants']) ?>" required
                            class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm text-gray-900 focus:ring focus:ring-indigo-500 focus:border-indigo-500">
                 </div>
 
-                <!-- Status Select Input -->
                 <div class="fade-in opacity-0 transition-opacity duration-500 delay-700">
                     <label class="block text-sm font-medium">Status:</label>
                     <select name="status" class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
@@ -200,14 +189,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </select>
                 </div>
 
-                <!-- Event Image Input -->
                 <div class="fade-in opacity-0 transition-opacity duration-500 delay-800">
                     <label class="block text-sm font-medium">Event Image (Optional - Current: <?= htmlspecialchars($event['image']) ?>):</label>
                     <input type="file" name="event_image" accept=".jpg,.jpeg,.png,.svg,.webp,.bmp,.gif"
                            class="mt-1 w-full text-gray-900 border border-gray-300 rounded-md shadow-sm">
                 </div>
 
-                <!-- Event Banner Input -->
                 <div class="fade-in opacity-0 transition-opacity duration-500 delay-900">
                     <label class="block text-sm font-medium">Event Banner (Optional - Current: <?= htmlspecialchars($event['banner']) ?>):</label>
                     <input type="file" name="event_banner" accept=".jpg,.jpeg,.png,.svg,.webp,.bmp,.gif"

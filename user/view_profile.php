@@ -9,12 +9,10 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
-// Fetch user details including phone number
 $stmt = $pdo->prepare("SELECT name, email, phone, avatar FROM users WHERE id = :id");
 $stmt->execute(['id' => $user_id]);
 $user = $stmt->fetch();
 
-// Fetch registered events
 $stmt = $pdo->prepare("
     SELECT e.title, e.event_date, e.event_time, e.location 
     FROM registrations r
@@ -29,27 +27,23 @@ $events = $stmt->fetchAll();
 <?php include '../includes/navbar.php'; ?>
 
 <body class="bg-gradient-to-r from-blue-200 to-purple-200">
-    <div class="container mx-auto my-10">
-        <h1 class="text-center text-2xl font-bold my-6">Your Profile</h1>
+    <h1 class="text-center text-2xl font-bold my-6">Your Profile</h1>
+    <div class="container mx-auto mb-10">
         
         <div class="bg-white/50 shadow-md rounded-lg p-6 mb-8">
             <h2 class="text-xl font-semibold text-gray-700 mb-4">Personal Information</h2>
             
-            <!-- Display profile picture -->
             <div class="flex items-center space-x-4 mb-4">
                 <?php
-            // Determine avatar file path
             if (!empty($user['avatar'])):
                 $avatar_path = '../uploads/avatars/' . htmlspecialchars($user['avatar']);
                 if (file_exists($avatar_path)): 
                     ?>
                     <img src="<?= $avatar_path ?>" alt="Profile Avatar" class="w-24 h-24 rounded-full border border-gray-300 object-cover">
                     <?php else: ?>
-                        <!-- If avatar file doesn't exist, show default avatar -->
                         <img src="../uploads/avatars/default-avatar.png" alt="Profile Avatar" class="w-24 h-24 rounded-full border border-gray-300 object-cover">
                         <?php endif; ?>
                         <?php else: ?>
-                            <!-- If no avatar is set, show default avatar -->
                             <img src="../uploads/avatars/default-avatar.png" alt="Profile Avatar" class="w-24 h-24 rounded-full border border-gray-300 object-cover">
                             <?php endif; ?>
                             <a href="edit_profile.php" class="text-blue-500 hover:underline">Edit Profile</a>
@@ -65,7 +59,7 @@ $events = $stmt->fetchAll();
         <?php if (count($events) > 0): ?>
             <ul class="space-y-4">
                 <?php foreach ($events as $event): ?>
-                    <li class="p-4 bg-gray-100 rounded-lg shadow-sm">
+                    <li class="p-4 bg-white-100/50 border-2 border-white rounded-lg shadow-sm">
                         <strong class="text-gray-800"><?= htmlspecialchars($event['title']) ?></strong> 
                         <div class="text-gray-600"><?= htmlspecialchars($event['event_date']) ?>, <?= htmlspecialchars($event['event_time']) ?></div>
                         <div class="text-gray-500">at <?= htmlspecialchars($event['location']) ?></div>

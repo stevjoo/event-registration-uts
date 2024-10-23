@@ -18,10 +18,10 @@ $events = $stmt->fetchAll();
     
     <div class="grid grid-cols-1 gap-6 px-4 sm:grid-cols-2 lg:grid-cols-3">
         <?php foreach ($events as $event): ?>
-            <div class="border rounded-lg bg-white/50 shadow-md p-4 text-left transition-all duration-300 hover:bg-[#2D364C] hover:shadow-xl hover:text-white">
+            <div class="rounded-lg bg-white/50 shadow-md p-4 text-left transition-all duration-300 hover:bg-gray-500/50 hover:shadow-xl hover:text-white">
                 <img src="../uploads/banner/<?= $event['banner'] ?>?v=<?= time() ?>" alt="<?= $event['title'] ?> Banner" class="w-full h-48 object-cover rounded-md mb-4 shadow-md">
                 <h2 class="text-xl font-semibold mb-2"><?= $event['title'] ?></h2>
-                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="showDetails(<?= $event['event_id'] ?>)">Details</button>
+                <button class="bg-blue-500 hover:bg-blue-700/75 text-white font-bold py-2 px-4 rounded" onclick="showDetails(<?= $event['event_id'] ?>)">Details</button>
             </div>
             <?php endforeach; ?>
         </div>
@@ -107,133 +107,3 @@ $events = $stmt->fetchAll();
     }
 
 </script>
-
-<!-- <style>
-    body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-    }
-
-    h1 {
-        text-align: center;
-        margin: 20px 0;
-    }
-
-    .event-list {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 20px;
-        padding: 0 10px;
-    }
-
-    .event-banner {
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        padding: 10px;
-        text-align: center;
-        width: 200px;
-        flex: 1 1 calc(25% - 20px);
-        max-width: 200px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    }
-
-    .event-banner img {
-        max-width: 100%;
-        border-radius: 8px;
-    }
-
-    .event-banner button {
-        margin-top: 10px;
-        padding: 5px 10px;
-        border: none;
-        border-radius: 5px;
-        background-color: #007bff;
-        color: white;
-        cursor: pointer;
-    }
-
-    .event-banner button:hover {
-        background-color: #0056b3;
-    }
-
-    .popup {
-        position: fixed;
-        z-index: 999;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.8);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .popup-content {
-        background-color: #fff;
-        padding: 15px;
-        border-radius: 8px;
-        position: relative;
-        width: 90%;
-        max-width: 400px;
-        text-align: center;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-        overflow: hidden;
-    }
-
-    .popup-image {
-        max-width: 80%;
-        height: auto;
-        border-radius: 8px;
-        margin-bottom: 10px;
-    }
-
-    .popup-buttons {
-        margin-top: 15px;
-    }
-
-    .popup-buttons button {
-        padding: 8px 12px;
-        border: none;
-        border-radius: 5px;
-        background-color: #007bff;
-        color: white;
-        cursor: pointer;
-        display: block;
-        margin: 5px auto;
-        width: 80%;
-    }
-
-    .popup-buttons button:nth-child(2) {
-        background-color: #dc3545; 
-    }
-
-    .popup-buttons button:nth-child(2):hover {
-        background-color: #c82333;
-    }
-
-    .popup-buttons button:hover {
-        background-color: #0056b3;
-    }
-
-    /* Media Queries for Responsiveness */
-    @media (max-width: 768px) {
-        .event-banner {
-            flex: 1 1 calc(50% - 20px);
-        }
-    }
-
-    @media (max-width: 480px) {
-        .event-banner {
-            flex: 1 1 100%;
-            max-width: 100%;
-        }
-
-        .popup-content {
-            width: 90%;
-            max-width: 90%;
-        }
-    }
-</style> -->

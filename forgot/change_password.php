@@ -47,20 +47,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-200 to-purple-200">
-
     <div class="w-full max-w-md bg-white p-8 rounded-lg shadow-lg transition-all transform hover:scale-105">
         <h2 class="text-3xl font-bold text-center text-gray-700 mb-6">Change Password</h2>
 
         <form method="POST" action="./change_password.php" class="space-y-6">
 
-            <!-- New Password Field -->
             <div class="opacity-0 translate-y-6 transition-opacity transition-transform duration-500 delay-200">
                 <label for="password" class="block text-sm font-medium text-gray-700">New Password:</label>
                 <input type="password" name="password" id="password" 
                        class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block sm:text-sm">
             </div>
 
-            <!-- Confirm Password Field -->
             <div class="opacity-0 translate-y-6 transition-opacity transition-transform duration-500 delay-300">
                 <label for="password_confirm" class="block text-sm font-medium text-gray-700">Confirm New Password:</label>
                 <input type="password" name="password_confirm" id="password_confirm" required

@@ -35,8 +35,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center bg-gradient-to-r from-blue-200 to-purple-200">
-    
-    <div class="w-full max-w-md bg-white p-8 rounded-lg shadow-lg transition-all transform hover:scale-105">
+    <img src="./asset/Event-ly.png" class="animate-bounce w-32 mb-5 object-contain">
+    <div class="w-full max-w-md bg-white/75 p-8 rounded-lg shadow-lg transition-all transform hover:scale-105">
         <h2 class="text-3xl font-bold text-center text-gray-700 mb-6">Login</h2>
 
         <form method="POST" action="" class="space-y-6">
@@ -69,9 +69,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <?php endif; ?>
     </div>
 
-    <div class="mt-6">
+    <div class="mt-10">
         <a href="index.php" 
-           class="py-2 px-6 bg-transparent text-white border border-white rounded-full shadow-md hover:bg-white hover:text-gray-700 transition-transform transform hover:scale-105 focus:ring-4 focus:ring-white focus:ring-opacity-50">
+           class="py-2 px-6 bg-white/50 text-gray-500 border border-white rounded-full shadow-md hover:bg-white hover:text-gray-700 transition-transform transform hover:scale-105 focus:ring-4 focus:ring-white focus:ring-opacity-50">
             ← Back to Home
         </a>
     </div>

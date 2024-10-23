@@ -7,7 +7,6 @@ if ($_SESSION['role'] != 'admin') {
     exit;
 }
 
-// Query events and count the number of registrations
 $stmt = $pdo->query("SELECT e.*, (SELECT COUNT(*) FROM registrations r WHERE r.event_id = e.event_id) AS total_registrations FROM events e");
 $events = $stmt->fetchAll();
 ?>
@@ -15,26 +14,24 @@ $events = $stmt->fetchAll();
 <script src="https://cdn.tailwindcss.com"></script>
 <?php include '../includes/navbar.php'; ?>
 
-<body class="bg-gradient-to-r from-green-200 to-blue-200">
+<body class="bg-gradient-to-r from-green-200 to-blue-200 flex flex-col min-h-screen">
     <h1 class="text-center text-2xl font-bold my-6">Manage Events</h1>
     
-    <div class="grid grid-cols-1 gap-6 px-4 sm:grid-cols-2 lg:grid-cols-3">
+    <div class="grid grid-cols-1 gap-6 px-4 sm:grid-cols-2 lg:grid-cols-3 mb-auto">
         <?php foreach ($events as $event): ?>
-            <div class="border rounded-lg bg-white/50 shadow-md p-4 text-left transition-all duration-300 ease-in-out hover:bg-[#2D364C] hover:text-white">
+            <div class="rounded-lg bg-white/50 shadow-md p-4 text-left transition-all duration-300 hover:bg-gray-500/50 hover:shadow-xl hover:text-white">
                 <?php
-            // Ensure the image file exists
             $banner_path = '../uploads/banner/' . htmlspecialchars($event['banner']);
             if (file_exists($banner_path)):
                 ?>
                 <img src="<?= $banner_path ?>?v=<?= time() ?>" alt="<?= htmlspecialchars($event['title']) ?> Banner" class="w-full h-48 object-cover rounded-md mb-4">
                 <?php else: ?>
-                    <!-- Display a default image if the file does not exist -->
                     <img src="../uploads/banner/default-banner.png" alt="Default Banner" class="w-full h-48 object-cover rounded-md mb-4">
                     <?php endif; ?>
                     
                     <h2 class="text-xl font-semibold mb-2"><?= htmlspecialchars($event['title']) ?></h2>
                     <p class="mb-4"><?= $event['total_registrations'] ?> registrants</p> 
-                    <button onclick="showDetails(<?= $event['event_id'] ?>)" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    <button onclick="showDetails(<?= $event['event_id'] ?>)" class="bg-blue-500 hover:bg-blue-700/75 text-white font-bold py-2 px-4 rounded">
                         Details
                     </button>
                 </div>
@@ -48,7 +45,7 @@ $events = $stmt->fetchAll();
                     </button>
                     
                     <div class="rounded-md border border-slate-300 border-1 p-2 shadow-md mb-4">
-                        <img id="popup-image" src="" alt="Event Image" class="w-full h-48 object-cover rounded-md">
+                    <img id="popup-image" src="" alt="Event Image" class="w-full h-48 object-cover rounded-md">
         </div>
         
         <h3 id="popup-title" class="text-3xl font-semibold mb-2"></h3>
@@ -67,7 +64,6 @@ $events = $stmt->fetchAll();
         </div>
     </div>
 </div>
-</body>
 
 <script>
     let currentEventId; 
@@ -75,6 +71,7 @@ $events = $stmt->fetchAll();
     function showDetails(eventId) {
         currentEventId = eventId; 
 
+        document.querySelector('footer').style.backgroundColor = 'rgba(0, 0, 0, 0.75)';
         fetch(`get_event_details.php?event_id=${eventId}`)
             .then(response => {
                 if (!response.ok) {
@@ -99,6 +96,7 @@ $events = $stmt->fetchAll();
 
     function closePopup() {
         document.getElementById('event-popup').style.display = 'none';
+        document.querySelector('footer').style.backgroundColor = 'rgba(0, 0, 0, 0.75)';
     }
 
     function editEvent() {
@@ -132,3 +130,14 @@ $events = $stmt->fetchAll();
         });
     }
 </script>
+
+<style>
+    footer {
+        position: sticky;
+        bottom: 0;
+        width: 100%;
+        background-color: rgba(0, 0, 0, 0.75);
+        color: white;
+    }
+</style>
+</body>

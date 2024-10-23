@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Event Registrations</title>
-    <!-- Include Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         h1 {
@@ -85,7 +84,6 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
 <div class="container mt-5">
     <h1 class="text-center text-2xl font-bold my-6">View Event Registrations</h1>
 
-    <!-- Export CSV Button -->
     <a href="view_registrations.php?export=csv" class="btn btn-primary mb-3">Export CSV</a>
 
     <div class="table-responsive">
@@ -117,7 +115,6 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
     </div>
 </div>
 </body>
-<!-- Include Bootstrap JS and dependencies -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

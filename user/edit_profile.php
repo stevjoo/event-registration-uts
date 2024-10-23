@@ -17,11 +17,10 @@ $errors = [];
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $name = $_POST['name'];
     $email = $_POST['email'];
-    $phone = $_POST['phone']; // Phone number field
+    $phone = $_POST['phone']; 
     $password = $_POST['password'];
     $password_confirm = $_POST['password_confirm'];
 
-    // Validation
     if (empty($name)) {
         $errors[] = 'Name is required';
     }
@@ -41,7 +40,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 
-    // Handle avatar upload
     $avatar_path = $user['avatar']; 
     if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
         $avatar_tmp_name = $_FILES['avatar']['tmp_name'];
@@ -89,20 +87,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <div class="container mx-auto my-10">
         <h1 class="text-center text-2xl font-bold my-6">Edit Profile</h1>
         
-        <!-- Profile Form -->
         <form action="edit_profile.php" method="POST" enctype="multipart/form-data" class="bg-white/50 p-6 rounded-lg shadow-lg">
             
-            <!-- Avatar Section -->
             <div class="mb-4 text-center">
                 <div class="mb-2 relative inline-block">
-                    <!-- Display existing avatar -->
                     <?php if ($user['avatar']): ?>
                         <img src="../uploads/avatars/<?= htmlspecialchars($user['avatar']) ?>" alt="Profile Picture" class="w-32 h-32 rounded-full object-cover">
                         <?php else: ?>
                             <img src="../uploads/avatars/default-avatar.png" alt="Default Avatar" class="w-32 h-32 rounded-full object-cover">
                             <?php endif; ?>
                             
-                            <!-- Edit Icon for Avatar -->
                             <label for="avatar" class="absolute bottom-0 right-0 bg-white p-2 rounded-full shadow-md cursor-pointer hover:bg-gray-200">
                                 <i class="fa fa-pencil-alt text-gray-700"></i>
                                 <input type="file" id="avatar" name="avatar" class="hidden">
@@ -110,37 +104,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
         </div>
         
-        <!-- Name Section -->
         <div class="mb-4">
             <label for="name" class="block text-gray-700 font-bold mb-2">Name:</label>
             <input type="text" id="name" name="name" value="<?= htmlspecialchars($user['name']) ?>" class="w-full bg-white/75 p-2 border border-gray-300 rounded-md">
         </div>
         
-        <!-- Email Section -->
         <div class="mb-4">
             <label for="email" class="block text-gray-700 font-bold mb-2">Email:</label>
             <input type="email" id="email" name="email" value="<?= htmlspecialchars($user['email']) ?>" class="w-full bg-white/75 p-2 border border-gray-300 rounded-md">
         </div>
         
-        <!-- Phone Number Section -->
         <div class="mb-4">
             <label for="phone" class="block text-gray-700 font-bold mb-2">Phone Number:</label>
             <input type="tel" id="phone" name="phone" value="<?= htmlspecialchars($user['phone']) ?>" placeholder="08XXXXXXXXXX" class="w-full bg-white/75 p-2 border border-gray-300 rounded-md">
         </div>
         
-        <!-- Password Section -->
         <div class="mb-4">
             <label for="password" class="block text-gray-700 font-bold mb-2">New Password (optional):</label>
             <input type="password" id="password" name="password" class="w-full bg-white/75 p-2 border border-gray-300 rounded-md">
         </div>
         
-        <!-- Confirm Password Section -->
         <div class="mb-4">
             <label for="password_confirm" class="block text-gray-700 font-bold mb-2">Confirm New Password:</label>
             <input type="password" id="password_confirm" name="password_confirm" class="w-full bg-white/75 p-2 border border-gray-300 rounded-md">
         </div>
         
-        <!-- Error Messages -->
         <?php if (count($errors) > 0): ?>
             <ul class="mb-4">
                 <?php foreach ($errors as $error): ?>
@@ -149,7 +137,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 </ul>
                 <?php endif; ?>
                 
-        <!-- Submit and Cancel Buttons -->
         <div class="flex flex-col space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
             <button type="submit" class="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600 transition w-full text-sm sm:w-auto">Update Profile</button>
             <a href="view_profile.php" class="bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-600 transition w-full sm:w-auto text-center">Cancel</a>
@@ -159,6 +146,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </div>
 </body>
 
-<!-- Include Font Awesome for the edit icon -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">

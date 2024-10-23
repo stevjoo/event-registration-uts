@@ -13,7 +13,6 @@ try {
     $users = []; 
 }
 
-// Retrieve the message from the session
 $message = isset($_SESSION['message']) ? $_SESSION['message'] : "";
 unset($_SESSION['message']);  
 ?>
@@ -24,21 +23,8 @@ unset($_SESSION['message']);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Users</title>
-    <!-- Include SweetAlert2 library -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        body {
-            background-color: #f8f9fa; 
-        }
-        h1 {
-            margin: 20px 0;
-            text-align: center;
-            color: #343a40;
-        }
-        
-    </style>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">        
 </head>
 <body class="bg-gradient-to-r from-green-200 to-blue-200">
 
@@ -94,7 +80,6 @@ unset($_SESSION['message']);
         }
     }
 
-    // Check if there is a message and show SweetAlert notification
     <?php if (!empty($message)): ?>
         Swal.fire({
             title: 'Notification',
