@@ -67,11 +67,10 @@ $events = $stmt->fetchAll();
 
 <script>
     let currentEventId; 
-    
+
     function showDetails(eventId) {
         currentEventId = eventId; 
 
-        document.querySelector('footer').style.backgroundColor = 'rgba(0, 0, 0, 0.75)';
         fetch(`get_event_details.php?event_id=${eventId}`)
             .then(response => {
                 if (!response.ok) {
@@ -96,7 +95,6 @@ $events = $stmt->fetchAll();
 
     function closePopup() {
         document.getElementById('event-popup').style.display = 'none';
-        document.querySelector('footer').style.backgroundColor = 'rgba(0, 0, 0, 0.75)';
     }
 
     function editEvent() {
@@ -130,14 +128,4 @@ $events = $stmt->fetchAll();
         });
     }
 </script>
-
-<style>
-    footer {
-        position: sticky;
-        bottom: 0;
-        width: 100%;
-        background-color: rgba(0, 0, 0, 0.75);
-        color: white;
-    }
-</style>
 </body>
