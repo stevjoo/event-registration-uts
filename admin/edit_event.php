@@ -50,12 +50,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $image_ext = pathinfo($image['name'], PATHINFO_EXTENSION);
 
         if (in_array(strtolower($image_ext), $allowed_extensions)) {
-            if (!empty($event['image']) && file_exists('../assets/images/' . $event['image'])) {
-                unlink('../assets/images/' . $event['image']);
+            if (!empty($event['image']) && file_exists('../uploads/event-images/' . $event['image'])) {
+                unlink('../uploads/event-images/' . $event['image']);
             }
 
             $imageName = uniqid() . '.' . $image_ext;
-            $imagePath = '../assets/images/' . $imageName;
+            $imagePath = '../uploads/event-images/' . $imageName;
             if (!move_uploaded_file($image['tmp_name'], $imagePath)) {
                 $uploadError = 'Error uploading image.';
             }
@@ -70,12 +70,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $banner_ext = pathinfo($banner['name'], PATHINFO_EXTENSION);
 
         if (in_array(strtolower($banner_ext), $allowed_extensions)) {
-            if (!empty($event['banner']) && file_exists('../assets/images/' . $event['banner'])) {
-                unlink('../assets/images/' . $event['banner']);
+            if (!empty($event['banner']) && file_exists('../uploads/images/' . $event['banner'])) {
+                unlink('../uploads/images/' . $event['banner']);
             }
 
             $bannerName = uniqid() . '_banner.' . $banner_ext;
-            $bannerPath = '../assets/images/' . $bannerName;
+            $bannerPath = '../uploads/banner/' . $bannerName;
             if (!move_uploaded_file($banner['tmp_name'], $bannerPath)) {
                 $uploadError = 'Error uploading banner.';
             }
@@ -112,13 +112,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Edit Event</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .form-container {
-            background-color: #2D364C; 
+        .form-container { 
             width: 80%; 
             max-width: 800px;
             padding: 5rem;
             border-radius: 10px;
-            color: white;
+            color: black;
         }
 
         .fade-in {
@@ -135,7 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body class="bg-gradient-to-r from-green-200 to-blue-200">
 <br>
     <div class="flex items-center justify-center min-h-screen">
-        <div class="form-container shadow-lg transition-transform duration-300 transform hover:scale-105 fade-in">
+        <div class="form-container bg-white/75 shadow-lg transition-transform duration-300 transform hover:scale-105 fade-in">
         
             <h1 class="text-2xl font-bold text-center mb-6">Edit Event</h1>
 
